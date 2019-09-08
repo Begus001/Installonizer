@@ -1,0 +1,19 @@
+﻿<Window x:Class="Installonizer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Installonizer"
+        mc:Ignorable="d"
+        Title="Installonizer" Height="100" Width="560" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <TextBox x:Name="tbPath" HorizontalAlignment="Left" Height="20" Margin="10,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="400" VerticalContentAlignment="Center"/>
+        <Button x:Name="btSetPath" Content="..." HorizontalAlignment="Left" Margin="415,35,0,0" VerticalAlignment="Top" Width="25" Height="20" BorderBrush="#FFDDDDDD" Click="BtSetPath_Click"/>
+        <Label Padding="0" Content="Directory or File to be installonized:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" Height="20"/>
+        <Button x:Name="btInstallonize" Content="Installonize" HorizontalAlignment="Left" Margin="445,35,0,0" VerticalAlignment="Top" Width="75" Height="20" BorderBrush="#FFDDDDDD"/>
+        <Button x:Name="btAbout" Content="?" HorizontalAlignment="Left" Margin="525,35,0,0" VerticalAlignment="Top" Width="20" Height="20" BorderBrush="#FFDDDDDD"/>
+        <CheckBox x:Name="cbBrowseFile" Content="Browse for File" HorizontalAlignment="Left" Margin="312,10,0,0" VerticalAlignment="Top" Height="20" VerticalContentAlignment="Center"/>
+        <CheckBox x:Name="checkBox" Content="x86" HorizontalAlignment="Left" Margin="445,10,0,0" VerticalAlignment="Top" Height="20" VerticalContentAlignment="Center"/>
+
+    </Grid>
+</Window>
