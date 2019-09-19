@@ -12,7 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.IO;
 using Path = System.IO.Path;
 
 namespace Installonizer
@@ -59,7 +58,7 @@ namespace Installonizer
 				System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog()
 				{
 					Title = "Select File to be installonized",
-					Filter = "Executables and Batch Files (*.exe, *.bat) | *exe; .bat | All Files (*.*) | *.*"
+					Filter = "Executables and Batch Files (*.exe, *.bat)|*.exe;*.bat|All Files (*.*)|*.*"
 				};
 
 				if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -89,28 +88,105 @@ namespace Installonizer
 
 		private void BtInstallonize_Click(object sender, RoutedEventArgs e)
 		{
+			Installonizor installonizer = new Installonizor();
+
 			if (!String.IsNullOrWhiteSpace(tbPath.Text))
 			{
-
 				if (setFileType != FileType.NotSet)
 				{
 					if (setFileType == FileType.Directory)
 					{
-						
-						MoveDirectory();
+						if ((bool)!cbX86.IsChecked)
+						{
+							if (installonizer.MoveDirectory(tbPath.Text, filename, false))
+							{
+								SuccessMessage(true);
+								return;
+							}
+							else
+							{
+								FailedMessage(true);
+								return;
+							}
+						}
+						else
+						{
+							if (installonizer.MoveDirectory(tbPath.Text, filename, true))
+							{
+								SuccessMessage(true);
+								return;
+							}
+							else
+							{
+								FailedMessage(true);
+								return;
+							}
+						}
+
 					}
-					else if(setFileType == FileType.Executable)
+					else if (setFileType == FileType.Executable)
 					{
-						
-						MoveFile();
+						if ((bool)!cbX86.IsChecked)
+						{
+							if (installonizer.MoveFile(tbPath.Text, filename, filenameExt, false))
+							{
+								SuccessMessage(false);
+								MessageBox.Show(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\" + filename + "\n" + tbPath.Text + "\n" + Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\" + filename + "\\" + filenameExt);
+								return;
+							}
+							else
+							{
+								FailedMessage(false);
+								return;
+							}
+						}
+						else
+						{
+							if (installonizer.MoveFile(tbPath.Text, filename, filenameExt, true))
+							{
+								SuccessMessage(false);
+								return;
+							}
+							else
+							{
+								FailedMessage(false);
+								return;
+							}
+						}
 					}
 					else
 					{
 						if (MessageBox.Show("The entered file is not an executable or a batch file.\nDo you want to continue?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
 						{
 							filenameExt = Path.GetFileName(tbPath.Text);
-							setFileType = FileType.Other;
-							MoveFile();
+
+
+							if ((bool)!cbX86.IsChecked)
+							{
+								if (installonizer.MoveFile(tbPath.Text, filename, filenameExt, false))
+								{
+									SuccessMessage(false);
+									return;
+								}
+								else
+								{
+									FailedMessage(false);
+									return;
+								}
+							}
+							else
+							{
+								if (installonizer.MoveFile(tbPath.Text, filename, filenameExt, true))
+								{
+									SuccessMessage(false);
+									return;
+								}
+								else
+								{
+									FailedMessage(false);
+									return;
+								}
+							}
 						}
 					}
 				}
@@ -121,13 +197,65 @@ namespace Installonizer
 					if (Path.GetExtension(tbPath.Text) == "")
 					{
 						setFileType = FileType.Directory;
-						MoveDirectory();
+
+						if ((bool)!cbX86.IsChecked)
+						{
+							if (installonizer.MoveDirectory(tbPath.Text, filename, false))
+							{
+								SuccessMessage(false);
+								return;
+							}
+							else
+							{
+								FailedMessage(false);
+								return;
+							}
+						}
+						else
+						{
+							if (installonizer.MoveDirectory(tbPath.Text, filename, true))
+							{
+								SuccessMessage(false);
+								return;
+							}
+							else
+							{
+								FailedMessage(false);
+								return;
+							}
+						}
 					}
 					else if (Path.GetExtension(tbPath.Text) == ".exe" || Path.GetExtension(tbPath.Text) == ".bat")
 					{
 						filenameExt = Path.GetFileName(tbPath.Text);
 						setFileType = FileType.Executable;
-						MoveFile();
+
+						if ((bool)!cbX86.IsChecked)
+						{
+							if (installonizer.MoveFile(tbPath.Text, filename, filenameExt, false))
+							{
+								SuccessMessage(false);
+								return;
+							}
+							else
+							{
+								FailedMessage(false);
+								return;
+							}
+						}
+						else
+						{
+							if (installonizer.MoveFile(tbPath.Text, filename, filenameExt, true))
+							{
+								SuccessMessage(false);
+								return;
+							}
+							else
+							{
+								FailedMessage(false);
+								return;
+							}
+						}
 					}
 					else
 					{
@@ -135,7 +263,33 @@ namespace Installonizer
 						{
 							filenameExt = Path.GetFileName(tbPath.Text);
 							setFileType = FileType.Other;
-							MoveFile();
+
+							if ((bool)!cbX86.IsChecked)
+							{
+								if (installonizer.MoveFile(tbPath.Text, filename, filenameExt, false))
+								{
+									SuccessMessage(false);
+									return;
+								}
+								else
+								{
+									FailedMessage(false);
+									return;
+								}
+							}
+							else
+							{
+								if (installonizer.MoveFile(tbPath.Text, filename, filenameExt, true))
+								{
+									SuccessMessage(false);
+									return;
+								}
+								else
+								{
+									FailedMessage(false);
+									return;
+								}
+							}
 						}
 					}
 				}
@@ -144,89 +298,36 @@ namespace Installonizer
 			{
 				MessageBox.Show("No path was entered.\nPlease enter a path or browse for a directory or a file.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
 			}
+
 			setFileType = FileType.NotSet;
 		}
 
 		private void BtAbout_Click(object sender, RoutedEventArgs e)
 		{
-			MessageBox.Show("Installonizer Version 0.1.0\nby Benjamin Goisser 2019\n\nhttps://github.com/Begus001/Installonizer", "About", MessageBoxButton.OK, MessageBoxImage.Information);
+			MessageBox.Show("Installonizer Version 0.2.0\nby Benjamin Goisser 2019\n\nhttps://github.com/Begus001/Installonizor", "About", MessageBoxButton.OK, MessageBoxImage.Information);
 		}
 
-		private void MoveFile()
+		private void SuccessMessage(bool dir)
 		{
-			if ((bool)!cbX86.IsChecked)
+			if (dir)
 			{
-				try
-				{
-					filename = UppercaseString(filename);
-					Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\" + filename);
-					File.Move(tbPath.Text, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\" + filename + "\\" + filenameExt);
-				}
-				catch
-				{
-					MessageBox.Show("File could not be moved!\nFile either doesn't exist, already exists in destination, you don't possess the permission to move it or folder already exists in destination.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-					return;
-				}
+				MessageBox.Show("Directory was successfully installonized!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 			}
 			else
 			{
-				try
-				{
-					filename = UppercaseString(filename);
-					Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + "\\" + filename);
-					File.Move(tbPath.Text, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + "\\" + filename + "\\" + filenameExt);
-				}
-				catch
-				{
-					MessageBox.Show("File could not be moved!\nFile either doesn't exist, already exists in destination, you don't possess the permission to move it or folder already exists in destination.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-					return;
-				}
+				MessageBox.Show("File was successfully installonized!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 			}
-
-			MessageBox.Show("File was successfully installonized!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 		}
 
-		private void MoveDirectory()
+		private void FailedMessage(bool dir)
 		{
-			if ((bool)!cbX86.IsChecked)
+			if (dir)
 			{
-				try
-				{
-					filename = UppercaseString(filename);
-					Directory.Move(tbPath.Text, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\" + filename);
-				}
-				catch
-				{
-					MessageBox.Show("Directory could not be moved!\nDirectory either doesn't exist, already exists in destination or you don't possess the permission to move it.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-					return;
-				}
+				MessageBox.Show("Directory could not be moved!\nDirectory either doesn't exist, already exists in destination or you don't possess the permission to move it.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 			else
 			{
-				try
-				{
-					filename = UppercaseString(filename);
-					Directory.Move(tbPath.Text, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + "\\" + filename);
-				}
-				catch
-				{
-					MessageBox.Show("Directory could not be moved!\nDirectory either doesn't exist, already exists in destination or you don't possess the permission to move it.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-					return;
-				}
-			}
-
-			MessageBox.Show("Directory was successfully installonized!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-		}
-
-		private string UppercaseString(string inputString)
-		{
-			if (!Char.IsUpper(inputString[0]))
-			{
-				return Char.ToUpper(inputString[0]) + inputString.Substring(1);
-			}
-			else
-			{
-				return inputString;
+				MessageBox.Show("File could not be moved!\nFile either doesn't exist, already exists in destination, you don't possess the permission to move it or folder already exists in destination.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 	}
