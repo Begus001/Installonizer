@@ -131,7 +131,6 @@ namespace Installonizer
 							if (installonizer.MoveFile(tbPath.Text, filename, filenameExt, false))
 							{
 								SuccessMessage(false);
-								MessageBox.Show(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\" + filename + "\n" + tbPath.Text + "\n" + Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\" + filename + "\\" + filenameExt);
 								return;
 							}
 							else
@@ -304,7 +303,7 @@ namespace Installonizer
 
 		private void BtAbout_Click(object sender, RoutedEventArgs e)
 		{
-			MessageBox.Show("Installonizer Version 0.2.0\nby Benjamin Goisser 2019\n\nhttps://github.com/Begus001/Installonizor", "About", MessageBoxButton.OK, MessageBoxImage.Information);
+			MessageBox.Show("Installonizer Version 0.2.1\nby Benjamin Goisser 2019\n\nhttps://github.com/Begus001/Installonizer", "About", MessageBoxButton.OK, MessageBoxImage.Information);
 		}
 
 		private void SuccessMessage(bool dir)

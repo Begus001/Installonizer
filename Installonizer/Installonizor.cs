@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using File = System.IO.File;
+using IWshRuntimeLibrary;
 
 namespace Installonizer
 {
@@ -18,12 +20,22 @@ namespace Installonizer
 					filename = UppercaseString(filename);
 					Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\" + filename);
 					File.Move(path, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\" + filename + "\\" + filenameExt);
+
+					WshShell shell = new WshShell();
+					IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + "\\Programs\\" + filename + ".lnk");
+					shortcut.TargetPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\" + filename + "\\" + filenameExt;
+					shortcut.Save();
 				}
 				else
 				{
 					filename = UppercaseString(filename);
 					Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + "\\" + filename);
 					File.Move(path, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + "\\" + filename + "\\" + filenameExt);
+
+					WshShell shell = new WshShell();
+					IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu) + "\\Programs\\" + filename + ".lnk");
+					shortcut.TargetPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + "\\" + filename + "\\" + filenameExt;
+					shortcut.Save();
 				}
 
 				return true;
